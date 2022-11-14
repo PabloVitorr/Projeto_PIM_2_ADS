@@ -35,6 +35,7 @@ cliente clienteNovo[500];
 
 /*Prototipos de Funções*/
 void tabulacaoTitulo();
+void quebraDeLinhaDescricao();
 void cadastroColaborador();
 void escritaArquivoColaborador();
 void leituraArquivoColaborador();
@@ -49,11 +50,19 @@ void relatorioGeralDeClientes();
 void relatorioDeClientesPorUsuario();
 void validacaoAtendimento();
 void usuarioAdmin();
+void barraDeStatus();
+void manual();
+void contatoSuporte();
+void menuAjuda();
 void menuInicial();
 
 /*Funções*/
 void tabulacaoTitulo() {
     printf("\n\t\t\t\t\t");
+}
+
+void quebraDeLinhaDescricao() {
+    printf("\n\n\n");
 }
 
 void cadastroColaborador() {
@@ -67,8 +76,10 @@ void cadastroColaborador() {
 
         do {
             system("clear");
+            barraDeStatus();
             tabulacaoTitulo();
-            printf("CADASTRO DE USUARIO\n");
+            printf("CADASTRO DE USUARIO");
+            quebraDeLinhaDescricao();
             printf("\nNome: ");
             scanf(" %99[^\n]", nome);
             printf("Usuario: ");
@@ -85,6 +96,7 @@ void cadastroColaborador() {
             colaboradorNovo[contadorCadastroColaboradorEscrita].grupo = grupo;
             contadorCadastroColaboradorEscrita++;
 
+            quebraDeLinhaDescricao();
             printf("Deseja cadastrar outro usuario? ");
             scanf(" %c", &resposta);
 
@@ -137,10 +149,12 @@ void relatorioCadastroColaboradores() {
         char resposta;
 
         system("clear");
+        barraDeStatus();
         tabulacaoTitulo();
-        printf("RELATORIO DE USUARIOS\n");
+        printf("RELATORIO DE USUARIOS");
+        quebraDeLinhaDescricao();
         while (contadorRelatorio < contadorCadastroColaboradorLeitura) {
-            printf("%s\n", colaboradorNovo[contadorRelatorio].nome);
+            printf("Nome: %s\t Usuario: %s \t Grupo de permissoes: %d\n\n", colaboradorNovo[contadorRelatorio].nome, colaboradorNovo[contadorRelatorio].usuario, colaboradorNovo[contadorRelatorio].grupo);
             contadorRelatorio++;
         }
     }
@@ -205,19 +219,21 @@ void cadastroCliente() {
 
     do {
         system("clear");
+        barraDeStatus();
         tabulacaoTitulo();
-        printf("CADASTRO DE CLIENTE\n");
-        printf("Nome / Razao Social: ");
+        printf("CADASTRO DE CLIENTE");
+        quebraDeLinhaDescricao();
+        printf("Razao Social: ");
         scanf(" %99[^\n]", nomeRazaoSocial);
-        printf("CPF/CNPJ: ");
+        printf("CNPJ: ");
         scanf(" %99[^\n]", cpfCnpj);
         printf("Telefone: ");
         scanf(" %99[^\n]", telefone);
         printf("E-mail: ");
         scanf(" %99[^\n]", email);
-        printf("Data de nascimento / Fundacao: ");
+        printf("Data de Fundacao: ");
         scanf(" %99[^\n]", dataDeNascimentoFundacao);
-        printf("Data contratacao: ");
+        printf("Data de contratacao de servico: ");
         scanf(" %99[^\n]", dataContratacao);
         printf("Servico contratado: ");
         scanf(" %99[^\n]", sevicoContratado);
@@ -232,6 +248,7 @@ void cadastroCliente() {
         strcpy(clienteNovo[contadorCadastroClienteEscrita].usuarioAtendimento, colaboradorLogado1.usuario);
         contadorCadastroClienteEscrita++;
 
+        quebraDeLinhaDescricao();
         printf("Deseja cadastrar outro cliente? ");
         scanf(" %c", &resposta);
 
@@ -266,6 +283,7 @@ void leituraArquivoCliente() {
     else {
         contadorCadastroClienteLeitura = 0;
         rewind(registroCadastroCliente);
+
         while (fscanf(registroCadastroCliente, " %99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^\n]", clienteNovo[contadorCadastroClienteLeitura].nomeRazaoSocial, clienteNovo[contadorCadastroClienteLeitura].cpfCnpj, clienteNovo[contadorCadastroClienteLeitura].dataDeNascimentoFundacao, clienteNovo[contadorCadastroClienteLeitura].telefone, clienteNovo[contadorCadastroClienteLeitura].email, clienteNovo[contadorCadastroClienteLeitura].dataContratacao, clienteNovo[contadorCadastroClienteLeitura].sevicoContratado, clienteNovo[contadorCadastroClienteLeitura].usuarioAtendimento) != EOF) {
             contadorCadastroClienteLeitura++;
         }
@@ -284,13 +302,15 @@ void relatorioDeClientes() {
         int contadorRelatorio = 0, teste;
 
         system("clear");
+        barraDeStatus();
         tabulacaoTitulo();
-        printf("RELATORIO DE CLIENTES\n");
+        printf("RELATORIO DE CLIENTES");
+        quebraDeLinhaDescricao();
 
         while(contadorRelatorio < contadorCadastroClienteLeitura) {
             teste = strcmp(colaboradorLogado1.usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
             if(teste == 0) {
-                printf("%s\n", clienteNovo[contadorRelatorio].nomeRazaoSocial);
+                printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Usuario responsavel: %s\n\n", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].usuarioAtendimento);
             }
             contadorRelatorio++;
         }
@@ -311,10 +331,13 @@ void relatorioGeralDeClientes() {
             char resposta;
 
             system("clear");
+            barraDeStatus();
             tabulacaoTitulo();
-            printf("RELATORIO GERAL DE CLIENTES\n");
+            printf("RELATORIO GERAL DE CLIENTES");
+            quebraDeLinhaDescricao();
+
             while (contadorRelatorio < contadorCadastroClienteLeitura) {
-                printf("%s\n", clienteNovo[contadorRelatorio].nomeRazaoSocial);
+                printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Usuario responsavel: %s\n\n", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].usuarioAtendimento);
                 contadorRelatorio++;
             }
         }
@@ -338,15 +361,18 @@ void relatorioDeClientesPorUsuario()
             char usuario[100];
 
             system("clear");
+            barraDeStatus();
             printf("Informe o usuario: ");
             scanf(" %99[^\n]", usuario);
 
             tabulacaoTitulo();
-            printf("RELATORIO DE CLIENTES POR USUARIO\n\n");
+            printf("RELATORIO DE CLIENTES POR USUARIO");
+            quebraDeLinhaDescricao();
+
             while (contadorRelatorio < contadorCadastroClienteLeitura) {
                 teste = strcmp(usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
                 if (teste == 0) {
-                    printf("%s\n", clienteNovo[contadorRelatorio].nomeRazaoSocial);
+                    printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\n Data De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Usuario responsavel: %s\n\n", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].usuarioAtendimento);
                 }
                 contadorRelatorio++;
             }
@@ -369,14 +395,65 @@ void usuarioAdmin() {
     }
 }
 
+void barraDeStatus() {
+    printf("NOME: %s USUARIO: %s\n\n", colaboradorLogado1.nome,colaboradorLogado1.usuario);
+}
+
+void manual() {
+    printf("Pressione qualquer teclar para continuar...");
+    getchar();getchar();
+}
+
+void contatoSuporte() {
+    system("clear");
+    barraDeStatus();
+    tabulacaoTitulo();
+    printf("CONTATOS SUPORTE");
+    quebraDeLinhaDescricao();
+    printf("\tE-MAIL: suporte@suporte.com.br\tCHAT: chat.com.br\n");
+    printf("\tTELEFONE: (00) 0000-0000\tCELULAR: (00)00000-0000\n");
+    quebraDeLinhaDescricao();
+
+    printf("Pressione qualquer tecla para continuar...");
+    getchar();getchar();
+}
+
+void menuAjuda() {
+    int opcao;
+    
+    system("clear");
+    barraDeStatus();
+    tabulacaoTitulo();
+    printf("MENU AJUDA");
+    quebraDeLinhaDescricao();
+    printf("-1.Contato Suporte\n-2.Manual de instrucoes\n\nOpcao: ");
+    scanf("%d", &opcao);
+
+    switch (opcao) {
+        
+        case 1:
+            contatoSuporte();
+            break;
+        
+        case 2:
+            manual();
+            break;
+        default :
+            printf("Opcao invalida!\n");
+            break;
+    }
+}
+
 void menuInicial() {
     int opcao;
     char resposta, respostaSaida;
     do {
         system("clear");
+        barraDeStatus();
         tabulacaoTitulo();
-        printf("MENU INICIAL\n");
-        printf("\n\n\n-1.Cadastro de usuario\n-2.Relatorio de usuarios\n-3.Cadastro de cliente\n-4.Relatorio de clientes\n-5.Relatorio geral de clientes\n-6.Relatorio de clientes por usuario\n-7.Sair\n\nOpcao: ");
+        printf("MENU INICIAL");
+        quebraDeLinhaDescricao();
+        printf("-1.Cadastro de usuario\n-2.Relatorio de usuarios\n-3.Cadastro de cliente\n-4.Relatorio de clientes\n-5.Relatorio geral de clientes\n-6.Relatorio de clientes por usuario\n-7.Ajuda\n-8.Sair\n\nOpcao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -406,6 +483,10 @@ void menuInicial() {
             break;
         
         case 7:
+            menuAjuda();
+            break;
+        
+        case 8:
             printf("Deseja realmente sair?: ");
             scanf(" %c", &resposta);
             break;
@@ -415,7 +496,8 @@ void menuInicial() {
             break;
         }
         
-        if(opcao != 7) {
+        if(opcao != 8) {
+            quebraDeLinhaDescricao();
             printf("Deseja retornar ao menu inicial? Digite (s) para retornar e (n) para sair: ");
             scanf(" %c", &resposta);
 
