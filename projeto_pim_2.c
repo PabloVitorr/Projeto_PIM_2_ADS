@@ -35,40 +35,25 @@ cliente clienteNovo[500];
 
 /*Prototipos de Funções*/
 void tabulacaoTitulo();
-void escritaArquivoColaborador();
 void cadastroColaborador();
+void escritaArquivoColaborador();
 void leituraArquivoColaborador();
+void relatorioCadastroColaboradores();
 int login();
 int validacaoColaborador(char usuario[], char senha[]);
-void relatorioCadastroColaboradores();
-void escritaArquivoCliente();
 void cadastroCliente();
+void escritaArquivoCliente();
 void leituraArquivoCliente();
-void relatorioCadastroCliente();
-void menuInicial();
-void usuarioAdmin();
-void relatorioDeAtendimento();
-void relatorioDeAtendimentoPorUsuario();
+void relatorioDeClientes();
+void relatorioGeralDeClientes();
+void relatorioDeClientesPorUsuario();
 void validacaoAtendimento();
+void usuarioAdmin();
+void menuInicial();
 
 /*Funções*/
 void tabulacaoTitulo() {
     printf("\n\t\t\t\t\t");
-}
-
-void escritaArquivoColaborador() {
-    int contadorEscrita = 0;
-    registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "a");
-    if (registroCadastroColaborador == NULL) {
-        printf("Erro ao abrir/criar o arquivo!");
-    }
-    else {
-        while (contadorEscrita < contadorCadastroColaboradorEscrita) {
-            fprintf(registroCadastroColaborador, "%s-%s-%s-%d\n", colaboradorNovo[contadorEscrita].nome, colaboradorNovo[contadorEscrita].usuario, colaboradorNovo[contadorEscrita].senha, colaboradorNovo[contadorEscrita].grupo);
-            contadorEscrita++;
-        }
-    }
-    fclose(registroCadastroColaborador);
 }
 
 void cadastroColaborador() {
@@ -112,6 +97,21 @@ void cadastroColaborador() {
     }
 }
 
+void escritaArquivoColaborador() {
+    int contadorEscrita = 0;
+    registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "a");
+    if (registroCadastroColaborador == NULL) {
+        printf("Erro ao abrir/criar o arquivo!");
+    }
+    else {
+        while (contadorEscrita < contadorCadastroColaboradorEscrita) {
+            fprintf(registroCadastroColaborador, "%s-%s-%s-%d\n", colaboradorNovo[contadorEscrita].nome, colaboradorNovo[contadorEscrita].usuario, colaboradorNovo[contadorEscrita].senha, colaboradorNovo[contadorEscrita].grupo);
+            contadorEscrita++;
+        }
+    }
+    fclose(registroCadastroColaborador);
+}
+
 void leituraArquivoColaborador() {
     registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "r");
     if (registroCadastroColaborador == NULL) {
@@ -125,6 +125,25 @@ void leituraArquivoColaborador() {
         }
     }
     fclose(registroCadastroColaborador);
+}
+
+void relatorioCadastroColaboradores() {
+    if(colaboradorLogado1.grupo == 2) {
+        printf("\nUsuario sem permissao\n");
+    }
+    else if(colaboradorLogado1.grupo == 1) {
+        leituraArquivoColaborador();
+        int contadorRelatorio = 0;
+        char resposta;
+
+        system("clear");
+        tabulacaoTitulo();
+        printf("RELATORIO DE USUARIOS\n");
+        while (contadorRelatorio < contadorCadastroColaboradorLeitura) {
+            printf("%s\n", colaboradorNovo[contadorRelatorio].nome);
+            contadorRelatorio++;
+        }
+    }
 }
 
 int login() {
@@ -177,38 +196,6 @@ int validacaoColaborador(char usuario[], char senha[]) {
     }
 }
 
-void relatorioCadastroColaboradores() {
-    if(colaboradorLogado1.grupo == 2) {
-        printf("\nUsuario sem permissao\n");
-    }
-    else if(colaboradorLogado1.grupo == 1) {
-        leituraArquivoColaborador();
-        int contadorRelatorio = 0;
-        char resposta;
-
-        system("clear");
-        tabulacaoTitulo();
-        printf("RELATORIO DE USUARIOS\n");
-        while (contadorRelatorio <= contadorCadastroColaboradorLeitura) {
-            printf("%s\n", colaboradorNovo[contadorRelatorio].nome);
-            contadorRelatorio++;
-        }
-    }
-}
-
-void escritaArquivoCliente() {
-    int contadorEscrita = 0;
-    registroCadastroCliente = fopen("arquivoCadastroCliente.txt", "a");
-    if (registroCadastroCliente == NULL) {
-        printf("Erro ao abrir/criar o arquivo!");
-    }
-    else {
-        fprintf(registroCadastroCliente, "%s-%s-%s-%s-%s-%s-%s-%s\n", clienteNovo[contadorEscrita].nomeRazaoSocial, clienteNovo[contadorEscrita].cpfCnpj, clienteNovo[contadorEscrita].dataDeNascimentoFundacao, clienteNovo[contadorEscrita].telefone, clienteNovo[contadorEscrita].email, clienteNovo[contadorEscrita].dataContratacao, clienteNovo[contadorEscrita].sevicoContratado, clienteNovo[contadorEscrita].usuarioAtendimento);
-        contadorEscrita++;
-    }
-    fclose(registroCadastroCliente);
-}
-
 void cadastroCliente() {
     char nomeRazaoSocial[100], cpfCnpj[100], telefone[100], email[100];
     char dataDeNascimentoFundacao[100], dataContratacao[100], sevicoContratado[100];
@@ -234,8 +221,6 @@ void cadastroCliente() {
         scanf(" %99[^\n]", dataContratacao);
         printf("Servico contratado: ");
         scanf(" %99[^\n]", sevicoContratado);
-        printf("Usuario responsavel pelo atendimento: ");
-        scanf(" %99[^\n]", usuarioAtendimento);
 
         strcpy(clienteNovo[contadorCadastroClienteEscrita].nomeRazaoSocial, nomeRazaoSocial);
         strcpy(clienteNovo[contadorCadastroClienteEscrita].cpfCnpj, cpfCnpj);
@@ -244,8 +229,8 @@ void cadastroCliente() {
         strcpy(clienteNovo[contadorCadastroClienteEscrita].dataDeNascimentoFundacao, dataDeNascimentoFundacao);
         strcpy(clienteNovo[contadorCadastroClienteEscrita].dataContratacao, dataContratacao);
         strcpy(clienteNovo[contadorCadastroClienteEscrita].sevicoContratado, sevicoContratado);
-        strcpy(clienteNovo[contadorCadastroClienteEscrita].usuarioAtendimento, usuarioAtendimento);
-        contadorCadastroClienteEscrita;
+        strcpy(clienteNovo[contadorCadastroClienteEscrita].usuarioAtendimento, colaboradorLogado1.usuario);
+        contadorCadastroClienteEscrita++;
 
         printf("Deseja cadastrar outro cliente? ");
         scanf(" %c", &resposta);
@@ -256,6 +241,21 @@ void cadastroCliente() {
         }
     } while (resposta == 's' || resposta == 'S');
     escritaArquivoCliente();
+}
+
+void escritaArquivoCliente() {
+    int contadorEscrita = 0;
+    registroCadastroCliente = fopen("arquivoCadastroCliente.txt", "a");
+    if (registroCadastroCliente == NULL) {
+        printf("Erro ao abrir/criar o arquivo!");
+    }
+    else {
+        while(contadorEscrita < contadorCadastroClienteEscrita) {
+            fprintf(registroCadastroCliente, "%s-%s-%s-%s-%s-%s-%s-%s\n", clienteNovo[contadorEscrita].nomeRazaoSocial, clienteNovo[contadorEscrita].cpfCnpj, clienteNovo[contadorEscrita].dataDeNascimentoFundacao, clienteNovo[contadorEscrita].telefone, clienteNovo[contadorEscrita].email, clienteNovo[contadorEscrita].dataContratacao, clienteNovo[contadorEscrita].sevicoContratado, clienteNovo[contadorEscrita].usuarioAtendimento);
+            contadorEscrita++;
+        }
+    }
+    fclose(registroCadastroCliente);
 }
 
 void leituraArquivoCliente() {
@@ -273,22 +273,99 @@ void leituraArquivoCliente() {
     fclose(registroCadastroCliente);
 }
 
-void relatorioCadastroCliente() {
-    if (access("arquivoCadastroCliente.txt", F_OK) == -1) {
+void relatorioDeClientes() {
+    if(access("arquivoCadastroCliente.txt", F_OK) == -1) {
         printf("\nNenhum cadastro encontrado\n");
     }
     else {
-        int contadorRelatorio = 0;
-        char resposta;
         leituraArquivoCliente();
+        leituraArquivoColaborador();
+
+        int contadorRelatorio = 0, teste;
 
         system("clear");
         tabulacaoTitulo();
         printf("RELATORIO DE CLIENTES\n");
-        while (contadorRelatorio <= contadorCadastroClienteLeitura) {
-            printf("%s\n", clienteNovo[contadorRelatorio].nomeRazaoSocial);
+
+        while(contadorRelatorio < contadorCadastroClienteLeitura) {
+            teste = strcmp(colaboradorLogado1.usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
+            if(teste == 0) {
+                printf("%s\n", clienteNovo[contadorRelatorio].nomeRazaoSocial);
+            }
             contadorRelatorio++;
         }
+    }
+}
+
+void relatorioGeralDeClientes() {
+    if(colaboradorLogado1.grupo == 2) {
+        printf("\nUsuario sem permissao\n");
+    }
+    else if(colaboradorLogado1.grupo == 1) {
+        if (access("arquivoCadastroCliente.txt", F_OK) == -1) {
+            printf("\nNenhum cadastro encontrado\n");
+        }
+        else {
+            leituraArquivoCliente();
+            int contadorRelatorio = 0;
+            char resposta;
+
+            system("clear");
+            tabulacaoTitulo();
+            printf("RELATORIO GERAL DE CLIENTES\n");
+            while (contadorRelatorio < contadorCadastroClienteLeitura) {
+                printf("%s\n", clienteNovo[contadorRelatorio].nomeRazaoSocial);
+                contadorRelatorio++;
+            }
+        }
+    }
+}
+
+void relatorioDeClientesPorUsuario()
+{
+    if(colaboradorLogado1.grupo == 2) {
+        printf("\nUsuario sem permissao\n");
+    }
+    else if(colaboradorLogado1.grupo == 1) {
+        if (access("arquivoCadastroCliente.txt", F_OK) == -1) {
+            printf("\nNenhum cadastro encontrado\n");
+        }
+        else {
+            leituraArquivoColaborador();
+            leituraArquivoCliente();
+
+            int contadorRelatorio = 0, teste;
+            char usuario[100];
+
+            system("clear");
+            printf("Informe o usuario: ");
+            scanf(" %99[^\n]", usuario);
+
+            tabulacaoTitulo();
+            printf("RELATORIO DE CLIENTES POR USUARIO\n\n");
+            while (contadorRelatorio < contadorCadastroClienteLeitura) {
+                teste = strcmp(usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
+                if (teste == 0) {
+                    printf("%s\n", clienteNovo[contadorRelatorio].nomeRazaoSocial);
+                }
+                contadorRelatorio++;
+            }
+        }
+    }
+}
+
+void usuarioAdmin() {
+    if (access("arquivoCadastroColaborador.txt", R_OK) == -1) {
+        registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "a");
+        int grupo;
+        char nomeAdmin[100], usuarioAdmin[100], senhaAdmin[100];
+        strcpy(nomeAdmin, "admin");
+        strcpy(usuarioAdmin, "admin");
+        strcpy(senhaAdmin, "admin");
+        grupo = 1;
+
+        fprintf(registroCadastroColaborador, "%s-%s-%s-%d\n", nomeAdmin, usuarioAdmin, senhaAdmin, grupo);
+        fclose(registroCadastroColaborador);
     }
 }
 
@@ -299,7 +376,7 @@ void menuInicial() {
         system("clear");
         tabulacaoTitulo();
         printf("MENU INICIAL\n");
-        printf("\n\n\n-1.Cadastro de usuario\n-2.Relatorio de usuarios\n-3.Cadastro de cliente\n-4.Relatorio de clientes\n-5.Relatorio de atendimentos\n-6.Relatorio de atendimentos por usuario\n-7.Sair\n\nOpcao: ");
+        printf("\n\n\n-1.Cadastro de usuario\n-2.Relatorio de usuarios\n-3.Cadastro de cliente\n-4.Relatorio de clientes\n-5.Relatorio geral de clientes\n-6.Relatorio de clientes por usuario\n-7.Sair\n\nOpcao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -317,15 +394,15 @@ void menuInicial() {
             break;
 
         case 4:
-            relatorioCadastroCliente();
+            relatorioDeClientes();
             break;
 
         case 5:
-            relatorioDeAtendimento();
+            relatorioGeralDeClientes();
             break;
 
         case 6:
-            relatorioDeAtendimentoPorUsuario();
+            relatorioDeClientesPorUsuario();
             break;
         
         case 7:
@@ -353,74 +430,7 @@ void menuInicial() {
     } while (resposta == 's' || resposta == 'S');
 }
 
-void usuarioAdmin() {
-    if (access("arquivoCadastroColaborador.txt", R_OK) == -1) {
-        registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "a");
-        int grupo;
-        char nomeAdmin[100], usuarioAdmin[100], senhaAdmin[100];
-        strcpy(nomeAdmin, "admin");
-        strcpy(usuarioAdmin, "admin");
-        strcpy(senhaAdmin, "admin");
-        grupo = 1;
-
-        fprintf(registroCadastroColaborador, "%s-%s-%s-%d\n", nomeAdmin, usuarioAdmin, senhaAdmin, grupo);
-        fclose(registroCadastroColaborador);
-    }
-}
-
-void relatorioDeAtendimento() {
-    if(access("arquivoCadastroCliente.txt", F_OK) == -1) {
-        printf("\nNenhum cadastro encontrado\n");
-    }
-    else {
-        leituraArquivoCliente();
-        leituraArquivoColaborador();
-
-        int contadorRelatorio = 0, teste;
-
-        while(contadorRelatorio <= contadorCadastroClienteLeitura) {
-            teste = strcmp(colaboradorLogado1.usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
-            if(teste == 0) {
-                printf("%s\n", clienteNovo[contadorRelatorio].nomeRazaoSocial);
-            }
-            contadorRelatorio++;
-        }
-    }
-}
-
-void relatorioDeAtendimentoPorUsuario()
-{
-    if(colaboradorLogado1.grupo == 2) {
-        printf("\nUsuario sem permissao\n");
-    }
-    else if(colaboradorLogado1.grupo == 1) {
-        if (access("arquivoCadastroCliente.txt", F_OK) == -1) {
-            printf("\nNenhum cadastro encontrado\n");
-        }
-        else {
-            leituraArquivoColaborador();
-            leituraArquivoCliente();
-
-            int contadorRelatorio = 0, teste;
-            char usuario[100];
-
-            system("clear");
-            printf("Informe o usuario: ");
-            scanf(" %99[^\n]", usuario);
-
-            tabulacaoTitulo();
-            printf("RELATORIO ATENDIMENTOS\n\n");
-            while (contadorRelatorio <= contadorCadastroClienteLeitura) {
-                teste = strcmp(usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
-                if (teste == 0) {
-                    printf("%s\n", clienteNovo[contadorRelatorio].nomeRazaoSocial);
-                }
-                contadorRelatorio++;
-            }
-        }
-    }
-}
-
+/*Função principal main*/
 int main() {
 
     usuarioAdmin();
