@@ -19,6 +19,12 @@ typedef struct colaborador {
 } colaborador;
 colaborador colaboradorNovo[500];
 
+typedef struct auterarSenha {
+    char novaSenhaTeste1[100];
+    char novaSenhaTeste2[100];
+}auterarSenha;
+auterarSenha cadastroNovaSenha;
+
 typedef struct colaboradorLogado {
     char nome[100], usuario[100], senha[100];
     int grupo;
@@ -37,6 +43,8 @@ cliente clienteNovo[500];
 void tabulacaoTitulo();
 void quebraDeLinhaDescricao();
 void cadastroColaborador();
+void alterarSenhaColaborador();
+void edicaoArquivoColaborador();
 void escritaArquivoColaborador();
 void leituraArquivoColaborador();
 void relatorioCadastroColaboradores();
@@ -107,6 +115,63 @@ void cadastroColaborador() {
         } while (resposta == 's' || resposta == 'S');
         escritaArquivoColaborador();
     }
+}
+
+void alterarSenhaColaborador() {
+    int contadorAlterarSenha = 0;
+    int validacao;
+    char resposta;
+
+    do {
+        leituraArquivoColaborador();
+
+        system("clear");
+        barraDeStatus();
+        tabulacaoTitulo();
+        printf("Auteracao de senha");
+        quebraDeLinhaDescricao();
+        printf("Digite a nova senha: ");
+        scanf(" %99[^\n]", cadastroNovaSenha.novaSenhaTeste1);
+        printf("Digite novamente para validacao: ");
+        scanf(" %99[^\n]", cadastroNovaSenha.novaSenhaTeste2);
+
+        validacao = strcmp(cadastroNovaSenha.novaSenhaTeste1, cadastroNovaSenha.novaSenhaTeste2);
+
+        if(validacao != 0) {
+            printf("Senhas divergentes!\nDeseja tentar novamente? ");
+            scanf(" %c", &resposta);
+
+            while (resposta != 's' && resposta != 'S' && resposta != 'n' && resposta != 'N') {
+                printf("Resposta invalida! Deseja cadastrar outro usuario? ");
+                scanf(" %c", &resposta);
+            }
+        }
+    } while ((resposta == 's' || resposta == 'S') && validacao != 0);
+
+    while(contadorAlterarSenha < contadorCadastroColaboradorLeitura) {
+        validacao = strcmp(colaboradorLogado1.usuario, colaboradorNovo[contadorAlterarSenha].usuario);
+        if(validacao == 0) {
+            strcpy(colaboradorNovo[contadorAlterarSenha].senha, cadastroNovaSenha.novaSenhaTeste1); 
+            contadorAlterarSenha = contadorCadastroColaboradorLeitura + 1;
+        }
+        contadorAlterarSenha++;
+    }
+    edicaoArquivoColaborador();
+}
+
+void edicaoArquivoColaborador() {
+    int contadorEdicao = 0;
+    registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "w");
+    if (registroCadastroColaborador == NULL) {
+        printf("Erro ao abrir/criar o arquivo!");
+    }
+    else {
+        while (contadorEdicao < contadorCadastroColaboradorLeitura) {
+            fprintf(registroCadastroColaborador, "%s-%s-%s-%d\n", colaboradorNovo[contadorEdicao].nome, colaboradorNovo[contadorEdicao].usuario, colaboradorNovo[contadorEdicao].senha, colaboradorNovo[contadorEdicao].grupo);
+            contadorEdicao++;
+        }
+    }
+    fclose(registroCadastroColaborador);
 }
 
 void escritaArquivoColaborador() {
@@ -396,7 +461,7 @@ void usuarioAdmin() {
 }
 
 void barraDeStatus() {
-    printf("NOME: %s USUARIO: %s\n\n", colaboradorLogado1.nome,colaboradorLogado1.usuario);
+    printf("NOME: %s \tUSUARIO: %s\n\n", colaboradorLogado1.nome,colaboradorLogado1.usuario);
 }
 
 void manual() {
@@ -446,14 +511,14 @@ void menuAjuda() {
 
 void menuInicial() {
     int opcao;
-    char resposta, respostaSaida;
+    char resposta;
     do {
         system("clear");
         barraDeStatus();
         tabulacaoTitulo();
         printf("MENU INICIAL");
         quebraDeLinhaDescricao();
-        printf("-1.Cadastro de usuario\n-2.Relatorio de usuarios\n-3.Cadastro de cliente\n-4.Relatorio de clientes\n-5.Relatorio geral de clientes\n-6.Relatorio de clientes por usuario\n-7.Ajuda\n-8.Sair\n\nOpcao: ");
+        printf("-1.Cadastro de usuario\n-2.Alterar senha\n-3.Relatorio de usuarios\n-4.Cadastro de cliente\n-5.Relatorio de clientes\n-6.Relatorio geral de clientes\n-7.Relatorio de clientes por usuario\n-8.Ajuda\n-9.Sair\n\nOpcao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -463,30 +528,34 @@ void menuInicial() {
             break;
 
         case 2:
-            relatorioCadastroColaboradores();
+            alterarSenhaColaborador();
             break;
 
         case 3:
-            cadastroCliente();
+            relatorioCadastroColaboradores();
             break;
 
         case 4:
-            relatorioDeClientes();
+            cadastroCliente();
             break;
 
         case 5:
-            relatorioGeralDeClientes();
+            relatorioDeClientes();
             break;
 
         case 6:
+            relatorioGeralDeClientes();
+            break;
+
+        case 7:
             relatorioDeClientesPorUsuario();
             break;
         
-        case 7:
+        case 8:
             menuAjuda();
             break;
         
-        case 8:
+        case 9:
             printf("Deseja realmente sair?: ");
             scanf(" %c", &resposta);
             break;
@@ -496,7 +565,7 @@ void menuInicial() {
             break;
         }
         
-        if(opcao != 8) {
+        if(opcao != 9) {
             quebraDeLinhaDescricao();
             printf("Deseja retornar ao menu inicial? Digite (s) para retornar e (n) para sair: ");
             scanf(" %c", &resposta);
