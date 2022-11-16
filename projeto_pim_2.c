@@ -36,6 +36,8 @@ typedef struct cliente {
     char cpfCnpj[100], telefone[100], email[100];
     char dataDeNascimentoFundacao[100];
     char dataContratacao[100], sevicoContratado[100], usuarioAtendimento[100];
+    int status;
+    double mensalidade;
 } cliente;
 cliente clienteNovo[500];
 
@@ -56,6 +58,7 @@ void leituraArquivoCliente();
 void relatorioDeClientes();
 void relatorioGeralDeClientes();
 void relatorioDeClientesPorUsuario();
+void atualizacaoAreceberMesAtual();
 void validacaoAtendimento();
 void usuarioAdmin();
 void barraDeStatus();
@@ -278,8 +281,9 @@ int validacaoColaborador(char usuario[], char senha[]) {
 void cadastroCliente() {
     char nomeRazaoSocial[100], cpfCnpj[100], telefone[100], email[100];
     char dataDeNascimentoFundacao[100], dataContratacao[100], sevicoContratado[100];
-    char usuarioAtendimento[100];
-    char resposta;
+    char usuarioAtendimento[100], resposta;
+    int status;
+    double mensalidade;
     contadorCadastroClienteEscrita = 0;
 
     do {
@@ -302,6 +306,10 @@ void cadastroCliente() {
         scanf(" %99[^\n]", dataContratacao);
         printf("Servico contratado: ");
         scanf(" %99[^\n]", sevicoContratado);
+        printf("Valor mensal serviço contratado: R$ ");
+        scanf("%lf", &mensalidade);
+        printf("Status (<1> Em andamento <2> Finalizado): ");
+        scanf("%d", &status);
 
         strcpy(clienteNovo[contadorCadastroClienteEscrita].nomeRazaoSocial, nomeRazaoSocial);
         strcpy(clienteNovo[contadorCadastroClienteEscrita].cpfCnpj, cpfCnpj);
@@ -310,7 +318,9 @@ void cadastroCliente() {
         strcpy(clienteNovo[contadorCadastroClienteEscrita].dataDeNascimentoFundacao, dataDeNascimentoFundacao);
         strcpy(clienteNovo[contadorCadastroClienteEscrita].dataContratacao, dataContratacao);
         strcpy(clienteNovo[contadorCadastroClienteEscrita].sevicoContratado, sevicoContratado);
+        clienteNovo[contadorCadastroClienteEscrita].mensalidade = mensalidade;
         strcpy(clienteNovo[contadorCadastroClienteEscrita].usuarioAtendimento, colaboradorLogado1.usuario);
+        clienteNovo[contadorCadastroClienteEscrita].status = status;
         contadorCadastroClienteEscrita++;
 
         quebraDeLinhaDescricao();
@@ -333,7 +343,7 @@ void escritaArquivoCliente() {
     }
     else {
         while(contadorEscrita < contadorCadastroClienteEscrita) {
-            fprintf(registroCadastroCliente, "%s-%s-%s-%s-%s-%s-%s-%s\n", clienteNovo[contadorEscrita].nomeRazaoSocial, clienteNovo[contadorEscrita].cpfCnpj, clienteNovo[contadorEscrita].dataDeNascimentoFundacao, clienteNovo[contadorEscrita].telefone, clienteNovo[contadorEscrita].email, clienteNovo[contadorEscrita].dataContratacao, clienteNovo[contadorEscrita].sevicoContratado, clienteNovo[contadorEscrita].usuarioAtendimento);
+            fprintf(registroCadastroCliente, "%s-%s-%s-%s-%s-%s-%s-%.2lf-%s-%d\n", clienteNovo[contadorEscrita].nomeRazaoSocial, clienteNovo[contadorEscrita].cpfCnpj, clienteNovo[contadorEscrita].dataDeNascimentoFundacao, clienteNovo[contadorEscrita].telefone, clienteNovo[contadorEscrita].email, clienteNovo[contadorEscrita].dataContratacao, clienteNovo[contadorEscrita].sevicoContratado, clienteNovo[contadorEscrita].mensalidade, clienteNovo[contadorEscrita].usuarioAtendimento, clienteNovo[contadorEscrita].status);
             contadorEscrita++;
         }
     }
@@ -349,7 +359,7 @@ void leituraArquivoCliente() {
         contadorCadastroClienteLeitura = 0;
         rewind(registroCadastroCliente);
 
-        while (fscanf(registroCadastroCliente, " %99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^\n]", clienteNovo[contadorCadastroClienteLeitura].nomeRazaoSocial, clienteNovo[contadorCadastroClienteLeitura].cpfCnpj, clienteNovo[contadorCadastroClienteLeitura].dataDeNascimentoFundacao, clienteNovo[contadorCadastroClienteLeitura].telefone, clienteNovo[contadorCadastroClienteLeitura].email, clienteNovo[contadorCadastroClienteLeitura].dataContratacao, clienteNovo[contadorCadastroClienteLeitura].sevicoContratado, clienteNovo[contadorCadastroClienteLeitura].usuarioAtendimento) != EOF) {
+        while (fscanf(registroCadastroCliente, " %99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%lf-%99[^-]-%d", clienteNovo[contadorCadastroClienteLeitura].nomeRazaoSocial, clienteNovo[contadorCadastroClienteLeitura].cpfCnpj, clienteNovo[contadorCadastroClienteLeitura].dataDeNascimentoFundacao, clienteNovo[contadorCadastroClienteLeitura].telefone, clienteNovo[contadorCadastroClienteLeitura].email, clienteNovo[contadorCadastroClienteLeitura].dataContratacao, clienteNovo[contadorCadastroClienteLeitura].sevicoContratado, &clienteNovo[contadorCadastroClienteLeitura].mensalidade,clienteNovo[contadorCadastroClienteLeitura].usuarioAtendimento, &clienteNovo[contadorCadastroClienteLeitura].status) != EOF) {
             contadorCadastroClienteLeitura++;
         }
     }
@@ -375,7 +385,13 @@ void relatorioDeClientes() {
         while(contadorRelatorio < contadorCadastroClienteLeitura) {
             teste = strcmp(colaboradorLogado1.usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
             if(teste == 0) {
-                printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Usuario responsavel: %s\n\n", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].usuarioAtendimento);
+                printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Valor mensal: R$ %.2lf\nUsuario responsavel: %s Status: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade, clienteNovo[contadorRelatorio].usuarioAtendimento);
+                if(clienteNovo[contadorRelatorio].status == 0) {
+                    printf("Em andamento\n\n");
+                }
+                else {
+                    printf("Finalizado\n\n");
+                }
             }
             contadorRelatorio++;
         }
@@ -402,7 +418,13 @@ void relatorioGeralDeClientes() {
             quebraDeLinhaDescricao();
 
             while (contadorRelatorio < contadorCadastroClienteLeitura) {
-                printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Usuario responsavel: %s\n\n", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].usuarioAtendimento);
+                printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Valor mensal: R$ %.2lf\nUsuario responsavel: %s Status: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade,clienteNovo[contadorRelatorio].usuarioAtendimento);
+                if(clienteNovo[contadorRelatorio].status == 0) {
+                    printf("Em andamento\n\n");
+                }
+                else {
+                    printf("Finalizado\n\n");
+                }
                 contadorRelatorio++;
             }
         }
@@ -437,10 +459,48 @@ void relatorioDeClientesPorUsuario()
             while (contadorRelatorio < contadorCadastroClienteLeitura) {
                 teste = strcmp(usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
                 if (teste == 0) {
-                    printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\n Data De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Usuario responsavel: %s\n\n", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].usuarioAtendimento);
+                    printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Usuario responsavel: %sStatus: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].usuarioAtendimento);
+                    if(clienteNovo[contadorRelatorio].status == 0) {
+                        printf("Em andamento\n\n");
+                    }
+                    else {
+                        printf("Finalizado\n\n");
+                    }
                 }
                 contadorRelatorio++;
             }
+        }
+    }
+}
+
+void atualizacaoAreceberMesAtual() {
+    if(colaboradorLogado1.grupo == 2) {
+        printf("\nUsuario sem permissao\n");
+    }
+    else if(colaboradorLogado1.grupo == 1) {
+        if (access("arquivoCadastroCliente.txt", F_OK) == -1) {
+            printf("\nNenhum cadastro encontrado\n");
+        }
+        else {
+            leituraArquivoCliente();
+
+            float totalAreceber = 0;
+            int contadorRelatorio = 0;
+
+            while(contadorRelatorio < contadorCadastroClienteLeitura) {
+                if(clienteNovo[contadorRelatorio].status == 1) {
+                    totalAreceber = totalAreceber + clienteNovo[contadorRelatorio].mensalidade;
+                }
+                contadorRelatorio++;
+            }
+            system("clear");
+            barraDeStatus();
+            tabulacaoTitulo();
+            printf("ATUALIZACAO MENSAL A RECEBER");
+            quebraDeLinhaDescricao();
+            tabulacaoTitulo();
+            printf("TOTAL: R$ %.2lf", totalAreceber);
+            quebraDeLinhaDescricao();
         }
     }
 }
@@ -498,8 +558,7 @@ void menuAjuda() {
         
         case 1:
             contatoSuporte();
-            break;
-        
+            break;      
         case 2:
             manual();
             break;
@@ -518,7 +577,7 @@ void menuInicial() {
         tabulacaoTitulo();
         printf("MENU INICIAL");
         quebraDeLinhaDescricao();
-        printf("-1.Cadastro de usuario\n-2.Alterar senha\n-3.Relatorio de usuarios\n-4.Cadastro de cliente\n-5.Relatorio de clientes\n-6.Relatorio geral de clientes\n-7.Relatorio de clientes por usuario\n-8.Ajuda\n-9.Sair\n\nOpcao: ");
+        printf("-1.Cadastro de usuario\n-2.Alterar senha\n-3.Relatorio de usuarios\n-4.Cadastro de cliente\n-5.Relatorio de clientes\n-6.Relatorio geral de clientes\n-7.Relatorio de clientes por usuario\n-8.Atualizacao a receber mes atual\n-9.Ajuda\n-10.Sair\n\nOpcao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -530,43 +589,37 @@ void menuInicial() {
         case 2:
             alterarSenhaColaborador();
             break;
-
         case 3:
             relatorioCadastroColaboradores();
             break;
-
         case 4:
             cadastroCliente();
             break;
-
         case 5:
             relatorioDeClientes();
             break;
-
         case 6:
             relatorioGeralDeClientes();
             break;
-
         case 7:
             relatorioDeClientesPorUsuario();
             break;
-        
         case 8:
+            atualizacaoAreceberMesAtual();
+            break;
+        case 9:
             menuAjuda();
             break;
-        
-        case 9:
+        case 10:
             printf("Deseja realmente sair?: ");
             scanf(" %c", &resposta);
             break;
-
         default:
             printf("Opcao invalida!\n");
             break;
         }
         
-        if(opcao != 9) {
-            quebraDeLinhaDescricao();
+        if(opcao != 10) {
             printf("Deseja retornar ao menu inicial? Digite (s) para retornar e (n) para sair: ");
             scanf(" %c", &resposta);
 
