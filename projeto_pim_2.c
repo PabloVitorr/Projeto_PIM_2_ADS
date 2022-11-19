@@ -77,11 +77,11 @@ void tabQuatro() {
 }
 
 void tabCinco() {
-    printf("\n\t\t\t\t\t");
+    printf("\t\t\t\t\t");
 }
 
 void tabSeis() {
-    printf("\n\t\t\t\t\t\t");
+    printf("\t\t\t\t\t\t");
 }
 
 void linhaDuas() {
@@ -270,6 +270,7 @@ int login() {
         tabCinco();
         printf("USUARIO: ");
         scanf(" %99[^\n]", usuario);
+        linhaDuas();
         tabCinco();
         printf("SENHA: ");
         scanf(" %99[^\n]", senha);
@@ -562,7 +563,7 @@ void usuarioAdmin() {
 }
 
 void barraDeStatus() {
-    printf("\tNOME: %s \tUSUARIO: %s\n", colaboradorLogado1.nome,colaboradorLogado1.usuario);
+    printf("\tNOME: %s \tUSUARIO: %s\n\n\n", colaboradorLogado1.nome,colaboradorLogado1.usuario);
 }
 
 void manual() {
@@ -656,6 +657,11 @@ void menuInicial() {
         case 10:
             printf("\tDeseja realmente sair?: ");
             scanf(" %c", &resposta);
+
+            while (resposta != 's' && resposta != 'S' && resposta != 'n' && resposta != 'N') {
+                printf("\tResposta invalida! Digite (s) para retornar e (n) para sair: ");
+                scanf(" %c", &resposta);
+            }
             break;
         default:
             printf("\tOpcao invalida!\n");
