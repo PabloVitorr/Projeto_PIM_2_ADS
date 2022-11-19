@@ -33,7 +33,7 @@ colaboradorLogado colaboradorLogado1;
 
 typedef struct cliente {
     char nomeRazaoSocial[100];
-    char cpfCnpj[100], telefone[100], email[100];
+    char cnpj[100], telefone[100], email[100];
     char dataDeNascimentoFundacao[100];
     char dataContratacao[100], sevicoContratado[100], usuarioAtendimento[100];
     int status;
@@ -42,8 +42,12 @@ typedef struct cliente {
 cliente clienteNovo[500];
 
 /*Prototipos de Funções*/
-void tabulacaoTitulo();
-void quebraDeLinhaDescricao();
+void tabQuatro();
+void tabCinco();
+void tabSeis();
+void linhaDuas();
+void linhaTres();
+void erroAberturaCriacaoArquivo();
 void cadastroColaborador();
 void alterarSenhaColaborador();
 void edicaoArquivoColaborador();
@@ -68,17 +72,37 @@ void menuAjuda();
 void menuInicial();
 
 /*Funções*/
-void tabulacaoTitulo() {
+void tabQuatro() {
+    printf("\t\t\t\t");
+}
+
+void tabCinco() {
     printf("\n\t\t\t\t\t");
 }
 
-void quebraDeLinhaDescricao() {
+void tabSeis() {
+    printf("\n\t\t\t\t\t\t");
+}
+
+void linhaDuas() {
+    printf("\n\n");
+}
+
+void linhaTres() {
     printf("\n\n\n");
+}
+
+void erroAberturaCriacaoArquivo() {
+    system("clear");
+    linhaTres();
+    tabCinco();
+    printf("Erro ao abrir/criar o arquivo!");
+    getchar();getchar();
 }
 
 void cadastroColaborador() {
     if(colaboradorLogado1.grupo == 2) {
-        printf("\nUsuario sem permissao\n");
+        printf("\tUsuario sem permissao!\n");
     }
     else if(colaboradorLogado1.grupo == 1) {
         int grupo;
@@ -88,17 +112,16 @@ void cadastroColaborador() {
         do {
             system("clear");
             barraDeStatus();
-            tabulacaoTitulo();
+            tabSeis();
             printf("CADASTRO DE USUARIO");
-            quebraDeLinhaDescricao();
-            printf("\nNome: ");
+            linhaTres();
+            printf("\tNOME: ");
             scanf(" %99[^\n]", nome);
-            printf("Usuario: ");
+            printf("\tUSUARIO: ");
             scanf(" %99[^\n]", usuario);
-            printf("Senha: ");
+            printf("\tSENHA: ");
             scanf(" %99[^\n]", senha);
-            tabulacaoTitulo();
-            printf("GRUPO\nDigite 1 para usuario administrador e 2 para os demais usuarios: ");
+            printf("\tGRUPO, DIGITE 1 PARA ADMINISTRADOR E 2 PARA DEMAIS USUARIOS: ");
             scanf("%d", &grupo);
 
             strcpy(colaboradorNovo[contadorCadastroColaboradorEscrita].nome, nome);
@@ -107,12 +130,12 @@ void cadastroColaborador() {
             colaboradorNovo[contadorCadastroColaboradorEscrita].grupo = grupo;
             contadorCadastroColaboradorEscrita++;
 
-            quebraDeLinhaDescricao();
-            printf("Deseja cadastrar outro usuario? ");
+            linhaDuas();
+            printf("\tDeseja cadastrar outro usuario ""s"" sim ""n"" nao? ");
             scanf(" %c", &resposta);
 
             while (resposta != 's' && resposta != 'S' && resposta != 'n' && resposta != 'N') {
-                printf("Resposta invalida! Deseja cadastrar outro usuario? ");
+                printf("\tResposta invalida! Deseja cadastrar outro usuario? ");
                 scanf(" %c", &resposta);
             }
         } while (resposta == 's' || resposta == 'S');
@@ -130,24 +153,30 @@ void alterarSenhaColaborador() {
 
         system("clear");
         barraDeStatus();
-        tabulacaoTitulo();
-        printf("Auteracao de senha");
-        quebraDeLinhaDescricao();
-        printf("Digite a nova senha: ");
+        tabSeis();
+        printf("AUTERACAO DE SENHA");
+        linhaTres();
+        printf("\tDIGITE A NOVA SENHA: ");
         scanf(" %99[^\n]", cadastroNovaSenha.novaSenhaTeste1);
-        printf("Digite novamente para validacao: ");
+        printf("\tDIGITE NOVAMENTE PARA VALIDACAO: ");
         scanf(" %99[^\n]", cadastroNovaSenha.novaSenhaTeste2);
 
         validacao = strcmp(cadastroNovaSenha.novaSenhaTeste1, cadastroNovaSenha.novaSenhaTeste2);
 
         if(validacao != 0) {
-            printf("Senhas divergentes!\nDeseja tentar novamente? ");
+            linhaDuas();
+            printf("\tSenhas divergentes!\n");
+            printf("\tDeseja tentar novamente? ");
             scanf(" %c", &resposta);
 
             while (resposta != 's' && resposta != 'S' && resposta != 'n' && resposta != 'N') {
-                printf("Resposta invalida! Deseja cadastrar outro usuario? ");
+                printf("\tResposta invalida! Deseja cadastrar outro usuario? ");
                 scanf(" %c", &resposta);
             }
+        }
+        else {
+            linhaDuas();
+            printf("\tSenha cadastrada com sucesso!\n");
         }
     } while ((resposta == 's' || resposta == 'S') && validacao != 0);
 
@@ -166,7 +195,7 @@ void edicaoArquivoColaborador() {
     int contadorEdicao = 0;
     registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "w");
     if (registroCadastroColaborador == NULL) {
-        printf("Erro ao abrir/criar o arquivo!");
+        erroAberturaCriacaoArquivo();
     }
     else {
         while (contadorEdicao < contadorCadastroColaboradorLeitura) {
@@ -181,7 +210,7 @@ void escritaArquivoColaborador() {
     int contadorEscrita = 0;
     registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "a");
     if (registroCadastroColaborador == NULL) {
-        printf("Erro ao abrir/criar o arquivo!");
+        erroAberturaCriacaoArquivo();
     }
     else {
         while (contadorEscrita < contadorCadastroColaboradorEscrita) {
@@ -195,7 +224,7 @@ void escritaArquivoColaborador() {
 void leituraArquivoColaborador() {
     registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "r");
     if (registroCadastroColaborador == NULL) {
-        printf("Erro ao abrir/criar o arquivo!");
+        erroAberturaCriacaoArquivo();
     }
     else {
         contadorCadastroColaboradorLeitura = 0;
@@ -209,7 +238,7 @@ void leituraArquivoColaborador() {
 
 void relatorioCadastroColaboradores() {
     if(colaboradorLogado1.grupo == 2) {
-        printf("\nUsuario sem permissao\n");
+        printf("\tUsuario sem permissao!\n");
     }
     else if(colaboradorLogado1.grupo == 1) {
         leituraArquivoColaborador();
@@ -218,13 +247,15 @@ void relatorioCadastroColaboradores() {
 
         system("clear");
         barraDeStatus();
-        tabulacaoTitulo();
+        tabSeis();
         printf("RELATORIO DE USUARIOS");
-        quebraDeLinhaDescricao();
+        linhaTres();
         while (contadorRelatorio < contadorCadastroColaboradorLeitura) {
-            printf("Nome: %s\t Usuario: %s \t Grupo de permissoes: %d\n\n", colaboradorNovo[contadorRelatorio].nome, colaboradorNovo[contadorRelatorio].usuario, colaboradorNovo[contadorRelatorio].grupo);
+            printf("\tNOME: %s\tUSUARIO: %s\tGRUPO DE PERMISSOES: %d", colaboradorNovo[contadorRelatorio].nome, colaboradorNovo[contadorRelatorio].usuario, colaboradorNovo[contadorRelatorio].grupo);
+            linhaDuas();
             contadorRelatorio++;
         }
+        linhaDuas();
     }
 }
 
@@ -233,23 +264,27 @@ int login() {
 
     do {
         system("clear");
-        tabulacaoTitulo();
-        printf("LOGIN\n");
-        printf("\n\tUSUARIO: ");
+        tabSeis();
+        printf("LOGIN");
+        linhaTres();
+        tabCinco();
+        printf("USUARIO: ");
         scanf(" %99[^\n]", usuario);
-        printf("\n\tSENHA: ");
+        tabCinco();
+        printf("SENHA: ");
         scanf(" %99[^\n]", senha);
 
         if (validacaoColaborador(usuario, senha) == 0) {
             return 0;
         }
         else {
-            system("clear");
+            linhaDuas();
+            tabQuatro();
             printf("Dados invalidos! Deseja tentar novamente? ");
             scanf(" %c", &resposta);
 
             while (resposta != 's' && resposta != 'S' && resposta != 'n' && resposta != 'N') {
-                system("clear");
+                tabQuatro();
                 printf("Resposta invalida! Deseja tentar novamente? ");
                 scanf(" %c", &resposta);
             }
@@ -279,7 +314,7 @@ int validacaoColaborador(char usuario[], char senha[]) {
 }
 
 void cadastroCliente() {
-    char nomeRazaoSocial[100], cpfCnpj[100], telefone[100], email[100];
+    char nomeRazaoSocial[100], cnpj[100], telefone[100], email[100];
     char dataDeNascimentoFundacao[100], dataContratacao[100], sevicoContratado[100];
     char usuarioAtendimento[100], resposta;
     int status;
@@ -289,30 +324,30 @@ void cadastroCliente() {
     do {
         system("clear");
         barraDeStatus();
-        tabulacaoTitulo();
+        tabSeis();
         printf("CADASTRO DE CLIENTE");
-        quebraDeLinhaDescricao();
-        printf("Razao Social: ");
+        linhaTres();
+        printf("\tRAZAO SOCIAL: ");
         scanf(" %99[^\n]", nomeRazaoSocial);
-        printf("CNPJ: ");
-        scanf(" %99[^\n]", cpfCnpj);
-        printf("Telefone: ");
+        printf("\tCNPJ: ");
+        scanf(" %99[^\n]", cnpj);
+        printf("\tTELEFONE: ");
         scanf(" %99[^\n]", telefone);
-        printf("E-mail: ");
+        printf("\tE-MAIL: ");
         scanf(" %99[^\n]", email);
-        printf("Data de Fundacao: ");
+        printf("\tDATA DE FUNDACAO: ");
         scanf(" %99[^\n]", dataDeNascimentoFundacao);
-        printf("Data de contratacao de servico: ");
+        printf("\tDATA DE CONTRATACAO DO SERVICO: ");
         scanf(" %99[^\n]", dataContratacao);
-        printf("Servico contratado: ");
+        printf("\tSERVICO CONTRATADO: ");
         scanf(" %99[^\n]", sevicoContratado);
-        printf("Valor mensal serviço contratado: R$ ");
+        printf("\tVALOR MENSAL SERVICO CONTRATADO: R$ ");
         scanf("%lf", &mensalidade);
-        printf("Status (<1> Em andamento <2> Finalizado): ");
+        printf("\tSTATUS ""1"" EM ANDAMENTO ""2"" FINALIZADO: ");
         scanf("%d", &status);
 
         strcpy(clienteNovo[contadorCadastroClienteEscrita].nomeRazaoSocial, nomeRazaoSocial);
-        strcpy(clienteNovo[contadorCadastroClienteEscrita].cpfCnpj, cpfCnpj);
+        strcpy(clienteNovo[contadorCadastroClienteEscrita].cnpj, cnpj);
         strcpy(clienteNovo[contadorCadastroClienteEscrita].telefone, telefone);
         strcpy(clienteNovo[contadorCadastroClienteEscrita].email, email);
         strcpy(clienteNovo[contadorCadastroClienteEscrita].dataDeNascimentoFundacao, dataDeNascimentoFundacao);
@@ -323,12 +358,12 @@ void cadastroCliente() {
         clienteNovo[contadorCadastroClienteEscrita].status = status;
         contadorCadastroClienteEscrita++;
 
-        quebraDeLinhaDescricao();
-        printf("Deseja cadastrar outro cliente? ");
+        linhaDuas();
+        printf("\tDeseja cadastrar outro cliente? ");
         scanf(" %c", &resposta);
 
         while (resposta != 's' && resposta != 'S' && resposta != 'n' && resposta != 'N') {
-            printf("Resposta invalida! Deseja cadastrar outro usuario? ");
+            printf("\tResposta invalida! Deseja cadastrar outro usuario? ");
             scanf(" %c", &resposta);
         }
     } while (resposta == 's' || resposta == 'S');
@@ -339,11 +374,11 @@ void escritaArquivoCliente() {
     int contadorEscrita = 0;
     registroCadastroCliente = fopen("arquivoCadastroCliente.txt", "a");
     if (registroCadastroCliente == NULL) {
-        printf("Erro ao abrir/criar o arquivo!");
+        erroAberturaCriacaoArquivo();
     }
     else {
         while(contadorEscrita < contadorCadastroClienteEscrita) {
-            fprintf(registroCadastroCliente, "%s-%s-%s-%s-%s-%s-%s-%.2lf-%s-%d\n", clienteNovo[contadorEscrita].nomeRazaoSocial, clienteNovo[contadorEscrita].cpfCnpj, clienteNovo[contadorEscrita].dataDeNascimentoFundacao, clienteNovo[contadorEscrita].telefone, clienteNovo[contadorEscrita].email, clienteNovo[contadorEscrita].dataContratacao, clienteNovo[contadorEscrita].sevicoContratado, clienteNovo[contadorEscrita].mensalidade, clienteNovo[contadorEscrita].usuarioAtendimento, clienteNovo[contadorEscrita].status);
+            fprintf(registroCadastroCliente, "%s-%s-%s-%s-%s-%s-%s-%.2lf-%s-%d\n", clienteNovo[contadorEscrita].nomeRazaoSocial, clienteNovo[contadorEscrita].cnpj, clienteNovo[contadorEscrita].dataDeNascimentoFundacao, clienteNovo[contadorEscrita].telefone, clienteNovo[contadorEscrita].email, clienteNovo[contadorEscrita].dataContratacao, clienteNovo[contadorEscrita].sevicoContratado, clienteNovo[contadorEscrita].mensalidade, clienteNovo[contadorEscrita].usuarioAtendimento, clienteNovo[contadorEscrita].status);
             contadorEscrita++;
         }
     }
@@ -353,13 +388,13 @@ void escritaArquivoCliente() {
 void leituraArquivoCliente() {
     registroCadastroCliente = fopen("arquivoCadastroCliente.txt", "r");
     if (registroCadastroCliente == NULL) {
-        printf("Erro ao abrir/criar arquivo!");
+        erroAberturaCriacaoArquivo();
     }
     else {
         contadorCadastroClienteLeitura = 0;
+        
         rewind(registroCadastroCliente);
-
-        while (fscanf(registroCadastroCliente, " %99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%lf-%99[^-]-%d", clienteNovo[contadorCadastroClienteLeitura].nomeRazaoSocial, clienteNovo[contadorCadastroClienteLeitura].cpfCnpj, clienteNovo[contadorCadastroClienteLeitura].dataDeNascimentoFundacao, clienteNovo[contadorCadastroClienteLeitura].telefone, clienteNovo[contadorCadastroClienteLeitura].email, clienteNovo[contadorCadastroClienteLeitura].dataContratacao, clienteNovo[contadorCadastroClienteLeitura].sevicoContratado, &clienteNovo[contadorCadastroClienteLeitura].mensalidade,clienteNovo[contadorCadastroClienteLeitura].usuarioAtendimento, &clienteNovo[contadorCadastroClienteLeitura].status) != EOF) {
+        while (fscanf(registroCadastroCliente, " %99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%99[^-]-%lf-%99[^-]-%d", clienteNovo[contadorCadastroClienteLeitura].nomeRazaoSocial, clienteNovo[contadorCadastroClienteLeitura].cnpj, clienteNovo[contadorCadastroClienteLeitura].dataDeNascimentoFundacao, clienteNovo[contadorCadastroClienteLeitura].telefone, clienteNovo[contadorCadastroClienteLeitura].email, clienteNovo[contadorCadastroClienteLeitura].dataContratacao, clienteNovo[contadorCadastroClienteLeitura].sevicoContratado, &clienteNovo[contadorCadastroClienteLeitura].mensalidade,clienteNovo[contadorCadastroClienteLeitura].usuarioAtendimento, &clienteNovo[contadorCadastroClienteLeitura].status) != EOF) {
             contadorCadastroClienteLeitura++;
         }
     }
@@ -368,7 +403,7 @@ void leituraArquivoCliente() {
 
 void relatorioDeClientes() {
     if(access("arquivoCadastroCliente.txt", F_OK) == -1) {
-        printf("\nNenhum cadastro encontrado\n");
+        printf("\n\tNenhum cadastro encontrado\n");
     }
     else {
         leituraArquivoCliente();
@@ -378,19 +413,21 @@ void relatorioDeClientes() {
 
         system("clear");
         barraDeStatus();
-        tabulacaoTitulo();
+        tabSeis();
         printf("RELATORIO DE CLIENTES");
-        quebraDeLinhaDescricao();
+        linhaTres();
 
         while(contadorRelatorio < contadorCadastroClienteLeitura) {
             teste = strcmp(colaboradorLogado1.usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
             if(teste == 0) {
-                printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Valor mensal: R$ %.2lf\nUsuario responsavel: %s Status: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade, clienteNovo[contadorRelatorio].usuarioAtendimento);
+                printf("\tRAZAO SOCIAL: %s\tCNPJ: %s\n\tTELEFONE: %s\t\tE-MAIL %s\n\tDATA DE FUNDACAO: %s\tDATA DE CONTRATACAO: %s\n\tSERVICO CONTRATADO: %s\tVALOR MENSAL: R$ %.2lf\n\tUSUARIO RESPONSAVEL: %s\tSTATUS: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade, clienteNovo[contadorRelatorio].usuarioAtendimento);
                 if(clienteNovo[contadorRelatorio].status == 0) {
-                    printf("Em andamento\n\n");
+                    printf("Em andamento");
+                    linhaDuas();
                 }
                 else {
-                    printf("Finalizado\n\n");
+                    printf("Finalizado");
+                    linhaDuas();
                 }
             }
             contadorRelatorio++;
@@ -400,11 +437,11 @@ void relatorioDeClientes() {
 
 void relatorioGeralDeClientes() {
     if(colaboradorLogado1.grupo == 2) {
-        printf("\nUsuario sem permissao\n");
+        printf("\n\tUsuario sem permissao\n");
     }
     else if(colaboradorLogado1.grupo == 1) {
         if (access("arquivoCadastroCliente.txt", F_OK) == -1) {
-            printf("\nNenhum cadastro encontrado\n");
+            printf("\n\tNenhum cadastro encontrado\n");
         }
         else {
             leituraArquivoCliente();
@@ -413,17 +450,19 @@ void relatorioGeralDeClientes() {
 
             system("clear");
             barraDeStatus();
-            tabulacaoTitulo();
+            tabSeis();
             printf("RELATORIO GERAL DE CLIENTES");
-            quebraDeLinhaDescricao();
+            linhaTres();
 
             while (contadorRelatorio < contadorCadastroClienteLeitura) {
-                printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Valor mensal: R$ %.2lf\nUsuario responsavel: %s Status: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade,clienteNovo[contadorRelatorio].usuarioAtendimento);
+                printf("\tRAZAO SOCIAL: %s\tCNPJ: %s\n\tTELEFONE: %s\tE-MAIL%s\n\tDATA DE FUNDACAO: %s\tDATA DE CONTRATACAO: %s\n\tSERVICO CONTRATADO: %s\tVALOR MENSAL: R$ %.2lf\n\tUSUARIO RESPONSAVEL: %s\tSTATUS: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade,clienteNovo[contadorRelatorio].usuarioAtendimento);
                 if(clienteNovo[contadorRelatorio].status == 0) {
-                    printf("Em andamento\n\n");
+                    printf("Em andamento");
+                    linhaDuas();
                 }
                 else {
-                    printf("Finalizado\n\n");
+                    printf("Finalizado");
+                    linhaDuas();
                 }
                 contadorRelatorio++;
             }
@@ -434,11 +473,11 @@ void relatorioGeralDeClientes() {
 void relatorioDeClientesPorUsuario()
 {
     if(colaboradorLogado1.grupo == 2) {
-        printf("\nUsuario sem permissao\n");
+        printf("\n\tUsuario sem permissao\n");
     }
     else if(colaboradorLogado1.grupo == 1) {
         if (access("arquivoCadastroCliente.txt", F_OK) == -1) {
-            printf("\nNenhum cadastro encontrado\n");
+            printf("\n\tNenhum cadastro encontrado\n");
         }
         else {
             leituraArquivoColaborador();
@@ -449,22 +488,24 @@ void relatorioDeClientesPorUsuario()
 
             system("clear");
             barraDeStatus();
-            printf("Informe o usuario: ");
-            scanf(" %99[^\n]", usuario);
-
-            tabulacaoTitulo();
+            tabSeis();
             printf("RELATORIO DE CLIENTES POR USUARIO");
-            quebraDeLinhaDescricao();
+            linhaTres();
+            printf("\tINFORME O USUARIO: ");
+            scanf(" %99[^\n]", usuario);
+            linhaDuas();
 
             while (contadorRelatorio < contadorCadastroClienteLeitura) {
                 teste = strcmp(usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
                 if (teste == 0) {
-                    printf("Razao social: %s CNPJ: %s\nTelefone: %s E-mail %s\nData De Fundacao: %s Data de contratacao: %s\nServico contratado: %s Usuario responsavel: %sStatus: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cpfCnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].usuarioAtendimento);
+                    printf("\tRAZAO SOCIAL: %s\tCNPJ: %s\n\tTELEFONE: %s\tE-MAIL%s\n\tDATA DE FUNDACAO: %s\tDATA DE CONTRATACAO: %s\n\tSERVICO CONTRATADO: %s\tVALOR MENSAL: R$ %.2lf\n\tUSUARIO RESPONSAVEL: %s\tSTATUS: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade,clienteNovo[contadorRelatorio].usuarioAtendimento);
                     if(clienteNovo[contadorRelatorio].status == 0) {
-                        printf("Em andamento\n\n");
+                        printf("Em andamento");
+                        linhaDuas();
                     }
                     else {
-                        printf("Finalizado\n\n");
+                        printf("Finalizado");
+                        linhaDuas();
                     }
                 }
                 contadorRelatorio++;
@@ -495,12 +536,12 @@ void atualizacaoAreceberMesAtual() {
             }
             system("clear");
             barraDeStatus();
-            tabulacaoTitulo();
+            tabSeis();
             printf("ATUALIZACAO MENSAL A RECEBER");
-            quebraDeLinhaDescricao();
-            tabulacaoTitulo();
-            printf("TOTAL: R$ %.2lf", totalAreceber);
-            quebraDeLinhaDescricao();
+            linhaDuas();
+            tabSeis();
+            printf("\tTOTAL: R$ %.2lf", totalAreceber);
+            linhaTres();
         }
     }
 }
@@ -521,25 +562,27 @@ void usuarioAdmin() {
 }
 
 void barraDeStatus() {
-    printf("NOME: %s \tUSUARIO: %s\n\n", colaboradorLogado1.nome,colaboradorLogado1.usuario);
+    printf("\tNOME: %s \tUSUARIO: %s\n", colaboradorLogado1.nome,colaboradorLogado1.usuario);
 }
 
 void manual() {
-    printf("Pressione qualquer teclar para continuar...");
+    system("clear");
+    barraDeStatus();
+    linhaDuas();
+    printf("\tPressione qualquer teclar para continuar...");
     getchar();getchar();
 }
 
 void contatoSuporte() {
     system("clear");
     barraDeStatus();
-    tabulacaoTitulo();
+    tabSeis();
     printf("CONTATOS SUPORTE");
-    quebraDeLinhaDescricao();
+    linhaTres();
     printf("\tE-MAIL: suporte@suporte.com.br\tCHAT: chat.com.br\n");
     printf("\tTELEFONE: (00) 0000-0000\tCELULAR: (00)00000-0000\n");
-    quebraDeLinhaDescricao();
-
-    printf("Pressione qualquer tecla para continuar...");
+    linhaDuas();
+    printf("\tPressione qualquer tecla para continuar...");
     getchar();getchar();
 }
 
@@ -548,10 +591,10 @@ void menuAjuda() {
     
     system("clear");
     barraDeStatus();
-    tabulacaoTitulo();
+    tabSeis();
     printf("MENU AJUDA");
-    quebraDeLinhaDescricao();
-    printf("-1.Contato Suporte\n-2.Manual de instrucoes\n\nOpcao: ");
+    linhaTres();
+    printf("\t-1.Contato Suporte\n\t-2.Manual de instrucoes\n\n\tOpcao: ");
     scanf("%d", &opcao);
 
     switch (opcao) {
@@ -574,10 +617,10 @@ void menuInicial() {
     do {
         system("clear");
         barraDeStatus();
-        tabulacaoTitulo();
+        tabSeis();
         printf("MENU INICIAL");
-        quebraDeLinhaDescricao();
-        printf("-1.Cadastro de usuario\n-2.Alterar senha\n-3.Relatorio de usuarios\n-4.Cadastro de cliente\n-5.Relatorio de clientes\n-6.Relatorio geral de clientes\n-7.Relatorio de clientes por usuario\n-8.Atualizacao a receber mes atual\n-9.Ajuda\n-10.Sair\n\nOpcao: ");
+        linhaTres();
+        printf("\t-1.Cadastro de usuario\n\t-2.Alterar senha\n\t-3.Relatorio de usuarios\n\t-4.Cadastro de cliente\n\t-5.Relatorio de clientes\n\t-6.Relatorio geral de clientes\n\t-7.Relatorio de clientes por usuario\n\t-8.Atualizacao a receber mes atual\n\t+9.Ajuda\n\t-10.Sair\n\n\tOpcao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -611,20 +654,20 @@ void menuInicial() {
             menuAjuda();
             break;
         case 10:
-            printf("Deseja realmente sair?: ");
+            printf("\tDeseja realmente sair?: ");
             scanf(" %c", &resposta);
             break;
         default:
-            printf("Opcao invalida!\n");
+            printf("\tOpcao invalida!\n");
             break;
         }
         
         if(opcao != 10) {
-            printf("Deseja retornar ao menu inicial? Digite (s) para retornar e (n) para sair: ");
+            printf("\tDeseja retornar ao menu inicial? Digite (s) para retornar e (n) para sair: ");
             scanf(" %c", &resposta);
 
             while (resposta != 's' && resposta != 'S' && resposta != 'n' && resposta != 'N') {
-                printf("Resposta invalida! Digite (s) para retornar e (n) para sair: ");
+                printf("\tResposta invalida! Digite (s) para retornar e (n) para sair: ");
                 scanf(" %c", &resposta);
             }
         }
