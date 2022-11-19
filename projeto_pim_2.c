@@ -421,8 +421,8 @@ void relatorioDeClientes() {
         while(contadorRelatorio < contadorCadastroClienteLeitura) {
             teste = strcmp(colaboradorLogado1.usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
             if(teste == 0) {
-                printf("\tRAZAO SOCIAL: %s\tCNPJ: %s\n\tTELEFONE: %s\t\tE-MAIL %s\n\tDATA DE FUNDACAO: %s\tDATA DE CONTRATACAO: %s\n\tSERVICO CONTRATADO: %s\tVALOR MENSAL: R$ %.2lf\n\tUSUARIO RESPONSAVEL: %s\tSTATUS: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade, clienteNovo[contadorRelatorio].usuarioAtendimento);
-                if(clienteNovo[contadorRelatorio].status == 0) {
+                printf("\tRAZAO SOCIAL: %s\tCNPJ: %s\n\tTELEFONE: %s\t\tE-MAIL: %s\n\tDATA DE FUNDACAO: %s\tDATA DE CONTRATACAO: %s\n\tSERVICO CONTRATADO: %s\tVALOR MENSAL: R$ %.2lf\n\tUSUARIO RESPONSAVEL: %s\tSTATUS: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade, clienteNovo[contadorRelatorio].usuarioAtendimento);
+                if(clienteNovo[contadorRelatorio].status == 1) {
                     printf("Em andamento");
                     linhaDuas();
                 }
@@ -456,8 +456,8 @@ void relatorioGeralDeClientes() {
             linhaTres();
 
             while (contadorRelatorio < contadorCadastroClienteLeitura) {
-                printf("\tRAZAO SOCIAL: %s\tCNPJ: %s\n\tTELEFONE: %s\tE-MAIL%s\n\tDATA DE FUNDACAO: %s\tDATA DE CONTRATACAO: %s\n\tSERVICO CONTRATADO: %s\tVALOR MENSAL: R$ %.2lf\n\tUSUARIO RESPONSAVEL: %s\tSTATUS: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade,clienteNovo[contadorRelatorio].usuarioAtendimento);
-                if(clienteNovo[contadorRelatorio].status == 0) {
+                printf("\tRAZAO SOCIAL: %s\tCNPJ: %s\n\tTELEFONE: %s\tE-MAIL: %s\n\tDATA DE FUNDACAO: %s\tDATA DE CONTRATACAO: %s\n\tSERVICO CONTRATADO: %s\tVALOR MENSAL: R$ %.2lf\n\tUSUARIO RESPONSAVEL: %s\tSTATUS: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade,clienteNovo[contadorRelatorio].usuarioAtendimento);
+                if(clienteNovo[contadorRelatorio].status == 1) {
                     printf("Em andamento");
                     linhaDuas();
                 }
@@ -499,8 +499,8 @@ void relatorioDeClientesPorUsuario()
             while (contadorRelatorio < contadorCadastroClienteLeitura) {
                 teste = strcmp(usuario, clienteNovo[contadorRelatorio].usuarioAtendimento);
                 if (teste == 0) {
-                    printf("\tRAZAO SOCIAL: %s\tCNPJ: %s\n\tTELEFONE: %s\tE-MAIL%s\n\tDATA DE FUNDACAO: %s\tDATA DE CONTRATACAO: %s\n\tSERVICO CONTRATADO: %s\tVALOR MENSAL: R$ %.2lf\n\tUSUARIO RESPONSAVEL: %s\tSTATUS: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade,clienteNovo[contadorRelatorio].usuarioAtendimento);
-                    if(clienteNovo[contadorRelatorio].status == 0) {
+                    printf("\tRAZAO SOCIAL: %s\tCNPJ: %s\n\tTELEFONE: %s\tE-MAIL: %s\n\tDATA DE FUNDACAO: %s\tDATA DE CONTRATACAO: %s\n\tSERVICO CONTRATADO: %s\tVALOR MENSAL: R$ %.2lf\n\tUSUARIO RESPONSAVEL: %s\tSTATUS: ", clienteNovo[contadorRelatorio].nomeRazaoSocial, clienteNovo[contadorRelatorio].cnpj, clienteNovo[contadorRelatorio].telefone, clienteNovo[contadorRelatorio].email, clienteNovo[contadorRelatorio].dataDeNascimentoFundacao, clienteNovo[contadorRelatorio].dataContratacao, clienteNovo[contadorRelatorio].sevicoContratado, clienteNovo[contadorRelatorio].mensalidade,clienteNovo[contadorRelatorio].usuarioAtendimento);
+                    if(clienteNovo[contadorRelatorio].status == 1) {
                         printf("Em andamento");
                         linhaDuas();
                     }
@@ -629,7 +629,6 @@ void menuInicial() {
         case 1:
             cadastroColaborador();
             break;
-
         case 2:
             alterarSenhaColaborador();
             break;
@@ -661,6 +660,10 @@ void menuInicial() {
             while (resposta != 's' && resposta != 'S' && resposta != 'n' && resposta != 'N') {
                 printf("\tResposta invalida! Digite (s) para retornar e (n) para sair: ");
                 scanf(" %c", &resposta);
+            }
+
+            if(resposta == 'n' || resposta == 'N') {
+                menuInicial();
             }
             break;
         default:
