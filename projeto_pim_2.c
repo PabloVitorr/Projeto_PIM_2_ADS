@@ -47,6 +47,7 @@ void tabCinco();
 void tabSeis();
 void linhaDuas();
 void linhaTres();
+void barraDeStatus();
 void erroAberturaCriacaoArquivo();
 void cadastroColaborador();
 void alterarSenhaColaborador();
@@ -63,9 +64,7 @@ void relatorioDeClientes();
 void relatorioGeralDeClientes();
 void relatorioDeClientesPorUsuario();
 void atualizacaoAreceberMesAtual();
-void validacaoAtendimento();
 void usuarioAdmin();
-void barraDeStatus();
 void manual();
 void contatoSuporte();
 void menuAjuda();
@@ -90,6 +89,10 @@ void linhaDuas() {
 
 void linhaTres() {
     printf("\n\n\n");
+}
+
+void barraDeStatus() {
+    printf("\tNOME: %s \tUSUARIO: %s\n\n\n", colaboradorLogado1.nome,colaboradorLogado1.usuario);
 }
 
 void erroAberturaCriacaoArquivo() {
@@ -560,10 +563,6 @@ void usuarioAdmin() {
         fprintf(registroCadastroColaborador, "%s-%s-%s-%d\n", nomeAdmin, usuarioAdmin, senhaAdmin, grupo);
         fclose(registroCadastroColaborador);
     }
-}
-
-void barraDeStatus() {
-    printf("\tNOME: %s \tUSUARIO: %s\n\n\n", colaboradorLogado1.nome,colaboradorLogado1.usuario);
 }
 
 void manual() {
