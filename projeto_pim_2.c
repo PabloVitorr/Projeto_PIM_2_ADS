@@ -587,6 +587,7 @@ void leituraArquivoCliente() {
     fclose(registroCadastroCliente);
 }
 
+
 void relatorioDeClientes() {
     if(access("arquivoCadastroCliente.txt", F_OK) == -1) {
         printf("\n\tNenhum cadastro encontrado\n");
