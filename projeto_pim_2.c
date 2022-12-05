@@ -53,6 +53,7 @@ typedef struct cliente {
 } cliente;
 cliente clienteNovo[500];
 
+/*Struct "manualUsuario", criada para armazenar o manual de usuario*/
 typedef struct manualUsuario {
     char manual[20000];
 }manualUsuario;
@@ -77,8 +78,8 @@ void edicaoArquivoColaborador();
 void escritaArquivoColaborador();
 void leituraArquivoColaborador();
 void relatorioCadastroColaboradores();
-int login();
 void usuarioAdmin();
+int login();
 int validacaoColaborador(char usuario[], char senha[]);
 /*Funções para trabalharmos com os dados dos clientes atendidos*/
 void cadastroCliente();
@@ -380,6 +381,26 @@ void relatorioCadastroColaboradores() {
     }
 }
 
+/*Função "usuarioAdmin" reponsável por criar o arquivo de cadastro de colaborador e um usuário admin na primeira vez em que o programa é executado para que seja possível
+ acessar o programa para cadastrar os demais usuários*/
+void usuarioAdmin() {
+    /*Teste efetuado com a função "access" para verificar se ja foi efetuado algum cadastro de cliente e criado o arquivo de cadastro, caso o teste retorne -1 será
+     será criado o usuário arquivo de cadastro de usuários e o usuário "admin" sera inserido*/
+    if (access("arquivoCadastroColaborador.txt", R_OK) == -1) {
+        registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "a");
+        int grupo,status;
+        char nomeAdmin[100], usuarioAdmin[100], senhaAdmin[100];
+        strcpy(nomeAdmin, "USUARIO ADMINISTRADOR");
+        strcpy(usuarioAdmin, "admin");
+        strcpy(senhaAdmin, "admin");
+        grupo = 1;
+        status = 1;
+
+        fprintf(registroCadastroColaborador, "%s-%s-%s-%d-%d\n", nomeAdmin, usuarioAdmin, senhaAdmin, grupo, status);
+        fclose(registroCadastroColaborador);
+    }
+}
+
 /*Função "login", responsável por controlar o acesso ao programa*/
 int login() {
     char usuario[100], senha[100], resposta;
@@ -399,6 +420,7 @@ int login() {
 
         /*Estrutura "if-else" com a função "validacaoColaborador" utilizada para validar se os dados inseridos possuem cadastro
          e controlar o acesso ao sistema*/
+
         if (validacaoColaborador(usuario, senha) == 0) {
             return 0;
         }
@@ -430,37 +452,13 @@ int login() {
     } while (resposta == 's' || resposta == 'S');
 }
 
-/*Função "usuarioAdmin" reponsável por criar o arquivo de cadastro de colaborador e um usuário admin na primeira vez em que o programa é executado para que seja possível
- acessar o programa para cadastrar os demais usuários*/
-void usuarioAdmin() {
-    /*Teste efetuado com a função "access" para verificar se ja foi efetuado algum cadastro de cliente e criado o arquivo de cadastro, caso o teste retorne -1 será
-     será criado o usuário arquivo de cadastro de usuários e o usuário "admin" sera inserido*/
-    if (access("arquivoCadastroColaborador.txt", R_OK) == -1) {
-        registroCadastroColaborador = fopen("arquivoCadastroColaborador.txt", "a");
-        int grupo,status;
-        char nomeAdmin[100], usuarioAdmin[100], senhaAdmin[100];
-        strcpy(nomeAdmin, "USUARIO ADMINISTRADOR");
-        strcpy(usuarioAdmin, "admin");
-        strcpy(senhaAdmin, "admin");
-        grupo = 1;
-        status = 1;
-
-        fprintf(registroCadastroColaborador, "%s-%s-%s-%d-%d\n", nomeAdmin, usuarioAdmin, senhaAdmin, grupo, status);
-        fclose(registroCadastroColaborador);
-    }
-}
-
 /*Função "validacaoColaborador", que retorna o resultado do teste de validação dos dados inseridos pelo usuário na função "login"*/
 int validacaoColaborador(char usuario[], char senha[]) {
     leituraArquivoColaborador();
-    int contadorValidacao = 0, teste1, teste2, teste3, teste4;
+    int contadorValidacao = 0;
 
     while (contadorValidacao <= contadorCadastroColaboradorLeitura) {
-        teste1 = strcmp(usuario, colaboradorNovo[contadorValidacao].usuario);
-        teste2 = strcmp(senha, colaboradorNovo[contadorValidacao].senha);
-        teste3 = teste1 + teste2;
-
-        if (teste3 == 0) {
+        if(strcmp(usuario, colaboradorNovo[contadorValidacao].usuario) == 0 && strcmp(senha, colaboradorNovo[contadorValidacao].senha) == 0) {
             if(colaboradorNovo[contadorValidacao].status == 2) {
                 return 3;
                 contadorValidacao = contadorCadastroColaboradorLeitura + 1;
@@ -783,7 +781,7 @@ void relatorioDeClientesPorUsuario() {
 void atualizacaoAreceberMesAtual() {
     /*Estrutura "if-else" onde é testado se o colaborador armazenado na struct "colaboradorLogado" tem permissão para gerar o relatório*/
     if(colaboradorLogado1.grupo == 2) {
-        printf("\nUsuario sem permissao\n");
+        printf("\n\tUsuario sem permissao\n");
     }
     else if(colaboradorLogado1.grupo == 1) {
         /*Teste efetuado com a função "access" para verificar se ja foi efetuado algum cadastro de cliente e criado o arquivo, caso o teste retorne -1 sera
@@ -879,6 +877,7 @@ void manual() {
     getchar();getchar();
 }
 
+/*Função "leituraArquivoManual" responsavel por apresentar ao usuario o manual de instruções do programa*/
 void leituraArquivoManual() {
     registroManual = fopen("arquivoManualUtilizacaoUsuario.txt", "r");
     if (registroManual == NULL) {
