@@ -36,7 +36,7 @@ typedef struct alterarSenha {
 }alterarSenha;
 alterarSenha cadastroNovaSenha;
 
-/*Struct "colaboradorLogado", utilizada para armazenar os dados do usuário que esta logado no programa para possibilitar o gerenciamento de permissões*/
+/*Struct "colaboradorLogado", utilizada para armazenar os dados do usuário que está logado no programa para possibilitar o gerenciamento de permissões*/
 typedef struct colaboradorLogado {
     char nome[100], usuario[100], senha[100];
     int grupo, statusColaborador;
@@ -53,14 +53,13 @@ typedef struct cliente {
 } cliente;
 cliente clienteNovo[500];
 
-/*Struct "manualUsuario", criada para armazenar o manual de usuario*/
+/*Struct "manualUsuario", criada para armazenar o manual de usuário*/
 typedef struct manualUsuario {
     char manual[20000];
 }manualUsuario;
 manualUsuario manualUtilizacaoUsuario;
 
 /*Prototipos de Funções*/
-/*Funções para facilitar formatação da interface apresentada ao usuário*/
 void data();
 void tabDois();
 void tabQuatro();
@@ -70,7 +69,6 @@ void tabNove();
 void linhaDuas();
 void linhaTres();
 void barraDeStatus();
-/*Funções para trabalharmos com os dados dos colaboradores*/
 void cadastroColaborador();
 void alterarSenhaColaborador();
 void alteracaoStatusColaborador();
@@ -81,7 +79,6 @@ void relatorioCadastroColaboradores();
 void usuarioAdmin();
 int login();
 int validacaoColaborador(char usuario[], char senha[]);
-/*Funções para trabalharmos com os dados dos clientes atendidos*/
 void cadastroCliente();
 int validacaoDataContratacao(int diaContratacao, int mesContratacao, int anoContratacao);
 void alterarStatusAtendimento();
@@ -92,7 +89,6 @@ void relatorioDeClientes();
 void relatorioGeralDeClientes();
 void relatorioDeClientesPorUsuario();
 void atualizacaoAreceberMesAtual();
-/*Demais funções*/
 void erroAberturaCriacaoArquivo();
 char efetuarOperacaoNovamente(char resposta);
 void menuAjuda();
@@ -230,7 +226,7 @@ void alterarSenhaColaborador() {
             linhaDuas();
             printf("\tSenha cadastrada com sucesso!\n");
         }
-        /*Enquanto o teste apontar senhas divergentes (validação != 0) e o usuario responder "s" para nova tentativa essa estrutura se repetira*/
+        /*Enquanto o teste apontar senhas divergentes (validação != 0) e o usuario responder "s" para nova tentativa essa estrutura se repetirá*/
     } while ((resposta == 's' || resposta == 'S') && validacao != 0);
 
     /*Estrutura "while" responsável por encontrar na struct "colaborador* o usuário corespondente ao usuário da struct "colaboradorLogado"
